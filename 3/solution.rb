@@ -1,3 +1,5 @@
+INPUT = 325489
+
 def get_edge_length num
   l = Math.sqrt(num).ceil
   l.even? ? l + 1 : l
@@ -32,8 +34,36 @@ def to_coords num
   position.map{|n| n - offset}
 end
 
+DIRECTIONS = [[-1,-1],[-1,0],[-1,1],[0,-1],[0,0],[0,1],[1,-1],[1,0],[1,1]]
+
+def get_sum_for coords, vals
+  adjacents = DIRECTIONS.map do |(x,y)|
+    cell = [coords[0] + x, coords[1] + y].to_s
+    vals[cell]
+  end
+
+  adjacents.compact.sum
+end
+
 def part1 num
   to_coords(num).map(&:abs).sum
 end
 
-puts part1(325489)
+def part2
+  val = 0
+  i = 0
+  cells = {[0,0].to_s => 1}
+
+  while val < INPUT do
+    i += 1
+    coords = to_coords(i)
+    val = get_sum_for(coords, cells)
+    cells[ coords.to_s ] = val
+  end
+
+  puts val
+end
+
+
+puts part1(INPUT)
+puts part2
