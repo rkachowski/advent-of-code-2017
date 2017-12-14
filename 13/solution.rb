@@ -9,7 +9,7 @@ input.each {|(i,l)| firewall[i] = l}
 def severity firewall, delay=0
   (0..firewall.keys.max).inject(0) do |acc,i|
     scan = firewall[i]
-    if !scan.nil? and (delay+i) % (2*scan - 2 ) == 0
+    if scan and (delay+i) % (2*scan - 2 ) == 0
       acc += scan.size * i
       return 1 if delay > 0
     end
@@ -26,8 +26,7 @@ score = severity(firewall, delay)
 until score == 0
   delay +=1
   score = severity(firewall, delay)
-  puts delay
 end
 
-puts "!"*10 + delay
+puts delay
 

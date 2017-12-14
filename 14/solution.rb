@@ -1,4 +1,4 @@
-input = File.read("input").chomp.split(",").map(&:to_i)
+input = "hfdlxzhv"
 
 def pinch_and_stuff arr, position, length
   return if length < 2
@@ -33,14 +33,10 @@ def get_hash input
   dense_hash.map{|c| c.to_s(16).rjust(2,"0")}.join
 end
 
-list = (0..255).to_a
-round list, input
+hashes = (0..127).to_a.map do |i|
+  code = input + "-#{i}"
+  get_hash(code.bytes).hex.to_s(2).gsub("1","#").gsub("0",".")
+end
 
-puts list[0] * list[1]
-
-## part2
-part2_input = File.read("input").chomp.bytes
-list = (0..255).to_a
-
-
-puts get_hash(part2_input)
+puts hashes.slice(0,8).map {|h| h.slice(0,8)}
+puts hashes.join.chars.count("#")
