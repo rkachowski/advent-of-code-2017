@@ -1,4 +1,5 @@
 input = "hfdlxzhv"
+#input = "flqrgnkx"
 
 def pinch_and_stuff arr, position, length
   return if length < 2
