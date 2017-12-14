@@ -36,8 +36,45 @@ end
 
 hashes = (0..127).to_a.map do |i|
   code = input + "-#{i}"
-  get_hash(code.bytes).hex.to_s(2).gsub("1","#").gsub("0",".")
+  hash = get_hash(code.bytes)
+  hash.chars.map{|c|c.hex.to_s(2).rjust(4,"0").gsub("1","#").gsub("0",".")}.join
 end
 
-puts hashes.slice(0,8).map {|h| h.slice(0,8)}
+#puts hashes.slice(0,8).map {|h| h.slice(0,8)}
 puts hashes.join.chars.count("#")
+
+#part 2
+hashes.map!(&:chars)
+
+$current_group = 0
+
+def hashes.neighbours cell
+  x, y = cell
+
+  [[x-1,y], [x+1,y], [x,y-1], [x,y+1]].reject {|c| c.any?{|e| e < 0 or e >= 128}}
+end
+
+def flood_fill value, grid, cell=[0,0]
+  return false unless grid[cell[0]][cell[1]] == "#"
+
+  grid[cell[0]][cell[1]] = value
+  grid.neighbours(cell).each {|c| flood_fill(value,grid, c)}
+
+  true
+end
+
+def print g
+  puts g.slice(0,20).map {|h| h.join.slice(0,20)}
+end
+
+
+hashes.each_index do |y|
+  hashes.fetch(y).each_index do |x|
+
+    result = flood_fill $current_group, hashes, [x,y]
+    $current_group += 1 if result
+  end
+end
+
+
+puts hashes.flatten.uniq.size - 1
