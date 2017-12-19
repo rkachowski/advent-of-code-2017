@@ -82,10 +82,7 @@ failed = ->() do
 end
 
 until failed.call do
-
   [p0,p1].each {|p| p.step until p.status == :recieving or p.status == :terminated}
 end
 
-puts p0.send_count
 puts p1.send_count
-puts p1
