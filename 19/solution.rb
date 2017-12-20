@@ -45,5 +45,4 @@ loop do
 end
 
 puts letters.join
-puts stops
-puts input.flatten.count "+"
+puts travels
