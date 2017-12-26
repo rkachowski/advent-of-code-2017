@@ -1,7 +1,10 @@
 @pattern = <<~PATTERN
-    .#.
-    ..#
-    ###
+    .#..#.
+    ..#..#
+    ######
+    .#..#.
+    ..#..#
+    ######
 PATTERN
 
 def flip_x pat
@@ -24,21 +27,22 @@ def pat arr
   arr.each {|l| puts l.join}
 end
 
-input = File.read("input").lines
-#input = " ../.# => ##./#../...
-#.#./..#/### => #..#/..../..../#..#
-#".chomp.lines
+def extract_segments size, pats
+  p = pats.each_slice(size).map{|l| l.flatten.each_slice(size).to_a }
+  even_segs = p.map {|l| l.select.with_index {|_,i| i.even? }.flatten}
+  odd_segs = p.map {|l| l.select.with_index {|_,i| i.odd? }.flatten}
+  even_segs.zip( odd_segs).flatten(1)
+end
 
+@rules = Hash.new {|hash, k| hash[k] = {} }
+input = File.read("input").lines
+input = "../.# => ##./#../...
+.#./..#/### => #..#/..../..../#..#".lines
 input.map! {|l| l.split(" => ").map(&:strip)}
 
-
-rules = Hash.new {|hash, k| hash[k] = {} }
-
-
 input.each do |inp, outp|
-  puts inp
   pats = inp.split("/")
-  pats.inject(rules) do |m,p|
+  pats.inject(@rules) do |m,p|
     if p.equal? pats.last
       m[p] = outp.strip.chomp
     else
@@ -47,4 +51,20 @@ input.each do |inp, outp|
     m[p]
   end
 end
- puts rules
+
+def iterate
+  #assume square
+  pat @pattern
+  split_size = @pattern.first.size % 2 ? 2 : 3
+  if @pattern.first.size % 2
+    #split into twos
+    @pattern.each_slice(2).to_a
+  else
+    #split into threes
+  end
+
+  #transform each sub pattern
+  #join
+end
+
+
